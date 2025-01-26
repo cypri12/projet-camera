@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surveillance Imprimante 3D</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+        }
+        video {
+            width: 80%;
+            max-width: 800px;
+            border: 2px solid #000;
+            margin: 20px auto;
+        }
+        .status {
+            margin: 10px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Surveillance Imprimante 3D</h1>
+    <div class="status">Statut : <span id="status">Vérification...</span></div>
+    <video id="cameraFeed" autoplay></video>
+    <script>
+        const serverURL = "http://<IP_RASPBERRY_PI>:5000"; // Remplace par l'IP de ton Raspberry Pi
+
+        async function checkStatus() {
+            try {
+                const response = await fetch(`${serverURL}/status`);
+                if (response.ok) {
+                    document.getElementById("status").textContent = "En ligne";
+                } else {
+                    document.getElementById("status").textContent = "Hors ligne";
+                }
+            } catch (error) {
+                document.getElementById("status").textContent = "Hors ligne";
+            }
+        }
+
+        async function startCameraFeed() {
+            const videoElement = document.getElementById("cameraFeed");
+            videoElement.src = `${serverURL}/video_feed`;
+        }
+
+        // Vérifie le statut du serveur et démarre le flux
+        checkStatus();
+        startCameraFeed();
+    </script>
+</body>
+</html>
